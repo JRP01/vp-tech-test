@@ -1,0 +1,21 @@
+.productdisplay-card-container{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.productdisplay-sortfilter-container{
+    display: flex;
+    width: 20%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.productdisplay-filter-container{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    height: inherit;
+}

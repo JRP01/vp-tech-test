@@ -1,9 +1,9 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './Pages/Home';
-import Baths from './Pages/Baths';
-import Toilets from './Pages/Toilets';
+import Home from './Pages/Home/Home';
+import Baths from './Pages/Baths/Baths';
+import Toilets from './Pages/Toilets/Toilets';
 import Navigation from './Components/NavBar/NavBar';
 import { Container } from 'react-bootstrap';
 
