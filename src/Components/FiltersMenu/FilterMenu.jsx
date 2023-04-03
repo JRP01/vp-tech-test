@@ -23,23 +23,23 @@ const FilterMenu = ({ facets, requestFacets, setRequestFacets }) => {
   };
 
   const addFacet = (facetIdentifier, identifier, value) => {
-    let test = { ...requestFacets };
-    if (!(facetIdentifier in test)) {
-      test[facetIdentifier] = [{ identifier, value }];
-    } else test[facetIdentifier].push({ identifier, value });
-    setRequestFacets(test);
+    let newFacet = { ...requestFacets };
+    if (!(facetIdentifier in newFacet)) {
+      newFacet[facetIdentifier] = [{ identifier, value }];
+    } else newFacet[facetIdentifier].push({ identifier, value });
+    setRequestFacets(newFacet);
   };
 
   const removeFacet = (facetIdentifier, identifier) => {
-    let test = { ...requestFacets };
+    let newFacet = { ...requestFacets };
 
-    test[facetIdentifier] = test[facetIdentifier].filter((employee) => {
+    newFacet[facetIdentifier] = newFacet[facetIdentifier].filter((employee) => {
       return employee.identifier !== identifier;
     });
-    if (test[facetIdentifier].length === 0) {
-      delete test[facetIdentifier];
+    if (newFacet[facetIdentifier].length === 0) {
+      delete newFacet[facetIdentifier];
     }
-    setRequestFacets(test);
+    setRequestFacets(newFacet);
   };
 
   return (
