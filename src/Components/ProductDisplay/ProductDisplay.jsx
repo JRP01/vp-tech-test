@@ -2,24 +2,19 @@ import { useEffect, useState } from 'react';
 import { fetchData } from '../../Utils/API';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import Button from 'react-bootstrap/Button';
-import Offcanvas from 'react-bootstrap/Offcanvas';
 import ProductCard from '../ProductCard/ProductCard';
-import Paginate from '../Pagination/Pagination'
+import Paginate from '../Pagination/Pagination';
+import FilterMenu from '../FiltersMenu/FilterMenu';
+import Spinner from 'react-bootstrap/Spinner';
 import './ProductDisplay.css';
+
 const ProductDisplay = ({ query }) => {
   const [result, setResult] = useState(null);
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [facets, setFacets] = useState(null);
   const [requestfacets, setRequestFacets] = useState({});
   const [sort, setSort] = useState({ value: 1, display: 'Recommened' });
-  const [show, setShow] = useState(false);
-
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  console.log(facets);
 
   useEffect(() => {
     fetchData({
@@ -41,54 +36,40 @@ const ProductDisplay = ({ query }) => {
     { value: 4, display: 'Largest Discount' },
   ];
 
-  const handleChange = (
-    facetIdentifier,
-    optionIdentifier,
-    optionValue,
-    checked
-  ) => {
-    if (checked) {
-      addFacet(facetIdentifier, optionIdentifier, optionValue);
-    } else {
-      removeFacet(facetIdentifier, optionIdentifier);
-    }
+  const handleSetFilter = (sortItem) => {
+    setSort(sortItem);
+    setPageNumber(1);
   };
-
-  const addFacet = (facetIdentifier, identifier, value) => {
-    let test = { ...requestfacets };
-    if (!(facetIdentifier in test)) {
-      test[facetIdentifier] = [{ identifier, value }];
-    } else test[facetIdentifier].push({ identifier, value });
-    setRequestFacets(test);
-  };
-
-  const removeFacet = (facetIdentifier, identifier) => {
-    let test = { ...requestfacets };
-
-    test[facetIdentifier] = test[facetIdentifier].filter((employee) => {
-      return employee.identifier !== identifier;
-    });
-    if (test[facetIdentifier].length === 0) {
-      console.log('hello');
-      delete test[facetIdentifier];
-    }
-    setRequestFacets(test);
-  };
-
 
   if (!result) {
-    return <p>Loading</p>;
+    return (
+      <div className='productdisplay-spinner-container'>
+        <Spinner animation='grow' variant='success' />
+        <Spinner animation='grow' variant='success' />
+        <Spinner animation='grow' variant='success' />
+        <Spinner animation='grow' variant='success' />
+      </div>
+    );
   }
 
   return (
     <>
       <div className='productdisplay-sortfilter-container'>
-        <Button variant='primary' onClick={handleShow}>
-          Filters
-        </Button>
-        <DropdownButton id='dropdown-basic-button' title={sort.display}>
+        <FilterMenu
+          facets={facets}
+          requestFacets={requestfacets}
+          setRequestFacets={setRequestFacets}
+        />
+        <DropdownButton
+          className='productdisplay-sortfilter'
+          id='dropdown-basic-button'
+          title={sort.display}
+        >
           {sortBy.map((sortItem, index) => (
-            <Dropdown.Item onClick={() => setSort(sortItem)}>
+            <Dropdown.Item
+              key={index}
+              onClick={() => handleSetFilter(sortItem)}
+            >
               {sortItem.display}
             </Dropdown.Item>
           ))}
@@ -105,40 +86,11 @@ const ProductDisplay = ({ query }) => {
           />
         ))}
       </div>
-          <Paginate currentPage={pageNumber} setCurrentPage={setPageNumber} totalPages={totalPages} />
-      <Offcanvas show={show} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Filters</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <div>
-            {facets.map((facet) => (
-              <div
-                className='productdisplay-filter-container'
-                key={facet.identifier}
-              >
-                <h3>{facet.displayName}</h3>
-                {facet.options.map((option) => (
-                  <label key={option.identifier}>
-                    <input
-                      type='checkbox'
-                      onChange={(e) =>
-                        handleChange(
-                          facet.identifier,
-                          option.identifier,
-                          option.value,
-                          e.target.checked
-                        )
-                      }
-                    />
-                    {option.displayValue} ({option.productCount})
-                  </label>
-                ))}
-              </div>
-            ))}
-          </div>
-        </Offcanvas.Body>
-      </Offcanvas>
+      <Paginate
+        currentPage={pageNumber}
+        setCurrentPage={setPageNumber}
+        totalPages={totalPages}
+      />
     </>
   );
 };

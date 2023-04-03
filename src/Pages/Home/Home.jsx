@@ -1,7 +1,7 @@
 import MenuCard from '../../Components/MenuCard/MenuCard';
 import toilet from '../../Assets/Images/toilet.jpg';
 import bath from '../../Assets/Images/bath.jpg';
-import './Home.css'
+import './Home.css';
 
 const Home = () => {
   const menuCardArray = [

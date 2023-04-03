@@ -1,24 +1,19 @@
 import React from 'react';
 import { Pagination } from 'react-bootstrap';
+import './Pagination.css';
 
-const Paginate =({currentPage, setCurrentPage, totalPages})=> {
-
-
-
-
-
-
-  const maxPageButtons = 5; // Show 5 page buttons: current page and 2 pages before and 2 pages after
+const Paginate = ({ currentPage, setCurrentPage, totalPages }) => {
+  const maxPageButtons = 5;
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-  }
+    window.scrollTo(0, 0);
+  };
 
   const renderPageButtons = () => {
     const pageButtons = [];
 
     if (totalPages <= maxPageButtons) {
-      // If the total number of pages is less than or equal to the maximum number of page buttons to show, just show all the pages
       for (let i = 1; i <= totalPages; i++) {
         pageButtons.push(
           <Pagination.Item
@@ -31,7 +26,6 @@ const Paginate =({currentPage, setCurrentPage, totalPages})=> {
         );
       }
     } else {
-      // Otherwise, show the current page and 2 pages before and after
       let startPage = Math.max(currentPage - 2, 1);
       let endPage = Math.min(startPage + maxPageButtons - 1, totalPages);
 
@@ -53,17 +47,23 @@ const Paginate =({currentPage, setCurrentPage, totalPages})=> {
     }
 
     return pageButtons;
-  }
+  };
 
   return (
-    <div>
+    <div className='pagination_container'>
       <Pagination>
-        <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} />
+        <Pagination.Prev
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        />
         {renderPageButtons()}
-        <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} />
+        <Pagination.Next
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        />
       </Pagination>
     </div>
   );
-}
+};
 
 export default Paginate;

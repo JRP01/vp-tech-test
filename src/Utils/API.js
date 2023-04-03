@@ -28,6 +28,5 @@ export const fetchData = async ({
   const data = await response.json();
   setData(data);
   setTotalPages(Math.ceil(data.pagination.total / data.pagination.size));
-
   setFacets(data.facets);
 };

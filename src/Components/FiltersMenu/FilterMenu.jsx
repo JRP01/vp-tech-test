@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import './FilterMenu.css';
 
-const FilterMenu = ({ facets, apiFacets, setApiFacets }) => {
+const FilterMenu = ({ facets, requestFacets, setRequestFacets }) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  console.log(apiFacets);
 
   const handleChange = (
     facetIdentifier,
@@ -16,8 +15,6 @@ const FilterMenu = ({ facets, apiFacets, setApiFacets }) => {
     optionValue,
     checked
   ) => {
-    console.log(facetIdentifier);
-    console.log(checked);
     if (checked) {
       addFacet(facetIdentifier, optionIdentifier, optionValue);
     } else {
@@ -25,30 +22,33 @@ const FilterMenu = ({ facets, apiFacets, setApiFacets }) => {
     }
   };
 
-  const addFacet = (facetIdentifier, optionIdentifier, optionValue) => {
-    let test = { ...apiFacets };
+  const addFacet = (facetIdentifier, identifier, value) => {
+    let test = { ...requestFacets };
     if (!(facetIdentifier in test)) {
-      test[facetIdentifier] = [{ optionIdentifier, optionValue }];
-    } else test[facetIdentifier].push({ optionIdentifier, optionValue });
-    setApiFacets(test);
+      test[facetIdentifier] = [{ identifier, value }];
+    } else test[facetIdentifier].push({ identifier, value });
+    setRequestFacets(test);
   };
 
-  const removeFacet = (facetIdentifier, optionIdentifier) => {
-    let test = { ...apiFacets };
+  const removeFacet = (facetIdentifier, identifier) => {
+    let test = { ...requestFacets };
 
     test[facetIdentifier] = test[facetIdentifier].filter((employee) => {
-      return employee.optionIdentifier !== optionIdentifier;
+      return employee.identifier !== identifier;
     });
     if (test[facetIdentifier].length === 0) {
-      console.log('hello');
       delete test[facetIdentifier];
     }
-    setApiFacets(test);
+    setRequestFacets(test);
   };
 
   return (
     <>
-      <Button variant='primary' onClick={handleShow}>
+      <Button
+        className='productdisplay-sortfilter'
+        variant='primary'
+        onClick={handleShow}
+      >
         Filters
       </Button>
 
@@ -59,7 +59,10 @@ const FilterMenu = ({ facets, apiFacets, setApiFacets }) => {
         <Offcanvas.Body>
           <div>
             {facets.map((facet) => (
-              <div className='filter-container' key={facet.identifier}>
+              <div
+                className='productdisplay-filter-container'
+                key={facet.identifier}
+              >
                 <h3>{facet.displayName}</h3>
                 {facet.options.map((option) => (
                   <label key={option.identifier}>
